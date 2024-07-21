@@ -1,1 +1,6 @@
 /target/
+logs
+server
+*.iml
+.idea
+dependency-reduced-pom.xml

@@ -3,74 +3,35 @@
 package cn.salx.plugins.dailyexplimit.command.subcommand;
 
 import cn.salx.plugins.dailyexplimit.DailyEXPLimit;
-import cn.salx.plugins.dailyexplimit.command.CommandContainer;
 import cn.salx.plugins.dailyexplimit.command.CommandHandler;
 import lombok.AllArgsConstructor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
-public class SubCommand_Help implements CommandHandler<CommandSender> {
+public class SubCommand_Reset implements CommandHandler<CommandSender> {
 
     private final DailyEXPLimit plugin;
 
     @Override
-    public void onCommand(
-            @NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] cmdArg) {
-        sendHelp(sender, commandLabel);
-    }
-
-
-    private void sendHelp(@NotNull CommandSender s, @NotNull String commandLabel) {
-        s.sendMessage("§7§m DailyEXPLimit §7§m");
-        commandPrintingLoop:
-        for (CommandContainer container : plugin.commandManager().getRegisteredCommands()) {
-            if (!container.isHidden()) {
-                boolean passed = false;
-                //selectivePermissions
-                final List<String> selectivePermissions = container.getSelectivePermissions();
-                if (selectivePermissions != null && !selectivePermissions.isEmpty()) {
-                    for (String selectivePermission : container.getSelectivePermissions()) {
-                        if (selectivePermission != null && !selectivePermission.isEmpty()) {
-                            if (s.hasPermission(selectivePermission)) {
-                                passed = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-                //requirePermissions
-                final List<String> requirePermissions = container.getPermissions();
-                if (requirePermissions != null && !requirePermissions.isEmpty()) {
-                    for (String requirePermission : requirePermissions) {
-                        if (requirePermission != null && !requirePermission.isEmpty() && !s.hasPermission(requirePermission)) {
-                            continue commandPrintingLoop;
-                        }
-                    }
-                    passed = true;
-                }
-                if (!passed) {
-                    continue;
-                }
-
-                String commandDesc = "帮助命令";
-                if (container.getDescription() != null) {
-                    commandDesc = container.getDescription();
-                    //noinspection ConstantValue
-                    if (commandDesc == null) {
-                        commandDesc = "子命令 " + container.getPrefix() + " # " + container.getClass().getCanonicalName() + " 未注册有效帮助描述信息";
-                    }
-                }
-                if (container.isDisabled() || (container.getDisabledSupplier() != null && container.getDisabledSupplier().get())) {
-                    if (s.hasPermission("kooksrv.showdisabled")) {
-
-                    }
-                } else {
-                }
-            }
+    public void onCommand(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] cmdArg) {
+        String playerName = cmdArg[0];
+        Player player = plugin.getServer().getPlayer(playerName);
+        if (player == null) {
+            sender.sendMessage("§c玩家不在线或不存在");
+            return;
         }
+        boolean reset = plugin.expGainedManager().resetPlayerExp(player);
+        player.sendMessage("§a重置 " + playerName + " 的经验" + (reset ? "成功" : "失败"));
     }
 
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] cmdArg) {
+        return plugin.getServer().getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
+    }
 }
