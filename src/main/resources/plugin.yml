@@ -1,0 +1,11 @@
+name: DailyEXPLimit
+version: '${project.version}'
+main: cn.salx.plugins.dailyexplimit.DailyEXPLimit
+api-version: '1.21'
+
+commands:
+  dexp:
+    description: 每日经验上限
+    usage: /dexp help
+    permission: dexp.admin
+    aliases: [dexp]
