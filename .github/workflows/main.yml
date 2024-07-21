@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '21'
-          distribution: 'openjdk'
+          distribution: 'adopt'
       - name: "Package"
         run: mvn -B package --file pom.xml -Dmaven.javadoc.skip=true
       - name: "Target Stage"
