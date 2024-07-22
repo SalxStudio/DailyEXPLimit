@@ -11,7 +11,7 @@ public class MyCronJob implements Job {
         // 这里编写你的任务逻辑
         JobDataMap dataMap = context.getJobDetail().getJobDataMap();
         DailyEXPLimit plugin = (DailyEXPLimit) dataMap.get("plugin");
-        plugin.expGainedManager().flush();
-        plugin.getLogger().info("job run");
+        plugin.expGainedManager().clearAll();
+        plugin.getLogger().info("reset job execute");
     }
 }

@@ -71,4 +71,10 @@ public class EXPGainedManager {
             plugin.database().getDatabaseHelper().updatePlayerGainedExp(key, value).join();
         });
     }
+
+    public void clearAll() {
+        resetAllPlayerExp();
+        plugin.expMaxManager().clearTempExpLimit();
+        plugin.database().getDatabaseHelper().deleteAll().join();
+    }
 }

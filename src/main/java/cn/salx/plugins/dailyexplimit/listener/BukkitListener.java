@@ -40,11 +40,10 @@ public class BukkitListener implements Listener {
         Integer left = gainedExp.getMiddle();
         Integer max = gainedExp.getRight();
         playerExpChangeEvent.setAmount(gained);
-        if (gained == 0) {
-            player.sendMessage(String.format("§c你的经验值已达到上限: %s", max));
+        if (gained != 0 && left == 0) {
+            player.sendMessage(String.format("§c你的经验值已达到上限，经验上限：%s, 今日已获取: %s", max, gained));
         } else {
-//            playerExpChangeEvent.getPlayer().sendMessage("获得了 " + gained + " 经验值, 还可以获得 " + left + " 经验值");
-            plugin.getLogger().info(String.format("%s 获得了 %s 经验值, 还可以获得 %s 经验值", player.getName(), gained, left));
+            plugin.getLogger().info(String.format("%s 获得了 %s 经验值, 还可以获得 %s 经验值, 上限值: %s", player.getName(), gained, left, max));
         }
     }
 }

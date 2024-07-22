@@ -59,4 +59,8 @@ public class EXPMaxManager {
         tempExpLimitMap.compute(player.getName(), (k, v) -> v == null ? limit : v + limit);
         return getUserExpLimit(player);
     }
+
+    public void clearTempExpLimit() {
+        tempExpLimitMap.clear();
+    }
 }

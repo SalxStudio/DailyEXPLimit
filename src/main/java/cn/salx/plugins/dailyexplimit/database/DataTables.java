@@ -14,11 +14,6 @@ import java.sql.SQLException;
 
 public enum DataTables {
 
-    PLAYERS("players", (table) -> {
-        table.addColumn("uuid", "VARCHAR(36) NOT NULL PRIMARY KEY");
-        table.addColumn("kook", "VARCHAR(255) NOT NULL UNIQUE");
-    }),
-
     PLAYER_GAINED_EXP("player_gained_exp", (table) -> {
         table.addColumn("uuid", "VARCHAR(36) NOT NULL PRIMARY KEY");
         table.addColumn("gained_exp", "int NOT NULL");

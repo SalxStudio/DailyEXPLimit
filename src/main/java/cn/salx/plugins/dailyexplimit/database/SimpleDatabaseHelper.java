@@ -58,78 +58,13 @@ public class SimpleDatabaseHelper {
 
     }
 
-    public CompletableFuture<@Nullable String> getBindFromPlayer(@NotNull UUID player) {
-        return CompletableFuture.supplyAsync(() -> {
-            try (SQLQuery query = DataTables.PLAYERS.createQuery()
-                    .addCondition("uuid", player.toString())
-                    .selectColumns("uuid", "kook")
-                    .setLimit(1)
-                    .build().execute();
-                 ResultSet resultSet = query.getResultSet()) {
-                if (resultSet.next()) {
-                    return resultSet.getString("kook");
-                }
-                return null;
-            } catch (SQLException e) {
-                throw new IllegalStateException("执行 SQL 查询时出现错误", e);
-            }
-        });
-    }
-
-    public CompletableFuture<@Nullable UUID> getBindFromKook(@NotNull String kook) {
-        return CompletableFuture.supplyAsync(() -> {
-            try (SQLQuery query = DataTables.PLAYERS.createQuery()
-                    .addCondition("kook", kook)
-                    .selectColumns("uuid", "kook")
-                    .setLimit(1)
-                    .build().execute();
-                 ResultSet resultSet = query.getResultSet()) {
-                if (resultSet.next()) {
-                    return UUID.fromString(resultSet.getString("uuid"));
-                }
-                return null;
-            } catch (SQLException e) {
-                throw new IllegalStateException("执行 SQL 查询时出现错误", e);
-            }
-        });
-    }
-
-    public CompletableFuture<@NotNull Integer> bind(UUID player, String kook) {
+    public CompletableFuture<Integer> deleteAll() {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                return DataTables.PLAYERS.createInsert()
-                        .setColumnNames("uuid", "kook")
-                        .setParams(player.toString(), kook)
-                        .returnGeneratedKey()
-                        .execute();
+                return DataTables.PLAYER_GAINED_EXP.createDelete().build().execute();
             } catch (SQLException e) {
                 throw new IllegalStateException("执行 SQL 查询时出现错误", e);
             }
         });
     }
-
-    public CompletableFuture<@NotNull Integer> unbind(UUID player) {
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                return DataTables.PLAYERS.createDelete()
-                        .addCondition("uuid", player.toString())
-                        .build().execute();
-            } catch (SQLException e) {
-                throw new IllegalStateException("执行 SQL 查询时出现错误", e);
-            }
-        });
-    }
-
-    public CompletableFuture<@NotNull Integer> unbind(String kook) {
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                return DataTables.PLAYERS.createDelete()
-                        .addCondition("kook", kook)
-                        .build().execute();
-            } catch (SQLException e) {
-                throw new IllegalStateException("执行 SQL 查询时出现错误", e);
-            }
-        });
-    }
-
 }
