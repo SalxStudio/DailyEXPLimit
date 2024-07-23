@@ -1,8 +1,10 @@
 package cn.salx.plugins.dailyexplimit.job;
 
 import cn.salx.plugins.dailyexplimit.DailyEXPLimit;
-import org.quartz.*;
-import org.quartz.impl.StdSchedulerFactory;
+import org.quartz.Job;
+import org.quartz.JobDataMap;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 
 public class MyCronJob implements Job {
 

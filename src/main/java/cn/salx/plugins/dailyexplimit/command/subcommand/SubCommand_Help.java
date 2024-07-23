@@ -1,5 +1,3 @@
-
-
 package cn.salx.plugins.dailyexplimit.command.subcommand;
 
 import cn.salx.plugins.dailyexplimit.DailyEXPLimit;

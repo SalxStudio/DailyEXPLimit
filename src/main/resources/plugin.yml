@@ -3,6 +3,8 @@ version: '${project.version}'
 main: cn.salx.plugins.dailyexplimit.DailyEXPLimit
 api-version: '1.21'
 
+softdepend: [PlaceholderAPI]
+
 commands:
   dexp:
     description: 每日经验上限

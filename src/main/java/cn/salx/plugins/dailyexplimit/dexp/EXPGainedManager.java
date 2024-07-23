@@ -28,13 +28,15 @@ public class EXPGainedManager {
     private void init() {
     }
 
-    public void playerJoinedServer(UUID player) {
-        Integer playerGainedExp = plugin.database().getDatabaseHelper().getPlayerGainedExp(player).join();
-        gainedExpMap.putIfAbsent(player, playerGainedExp == null ? 0 : playerGainedExp);
+    public void playerJoinedServer(Player player) {
+        UUID playerUniqueId = player.getUniqueId();
+        Integer playerGainedExp = plugin.database().getDatabaseHelper().getPlayerGainedExp(playerUniqueId).join();
+        gainedExpMap.putIfAbsent(playerUniqueId, playerGainedExp == null ? 0 : playerGainedExp);
     }
 
-    public void playerQuitServer(UUID player) {
-        Integer result = plugin.database().getDatabaseHelper().updatePlayerGainedExp(player, gainedExpMap.get(player)).join();
+    public void playerQuitServer(Player player) {
+        UUID playerUniqueId = player.getUniqueId();
+        Integer result = plugin.database().getDatabaseHelper().updatePlayerGainedExp(playerUniqueId, gainedExpMap.get(playerUniqueId)).join();
         if (result.compareTo(1) == 0) {
             plugin.getLogger().info("玩家 " + player + " 的经验值已保存");
             gainedExpMap.remove(player);
@@ -56,6 +58,10 @@ public class EXPGainedManager {
         }
         gainedExpMap.put(player.getUniqueId(), alreadyGained + result.getLeft());
         return result;
+    }
+
+    public Integer getPlayerGainedExp(Player player) {
+        return gainedExpMap.getOrDefault(player.getUniqueId(), 0);
     }
 
     public boolean resetPlayerExp(Player player) {

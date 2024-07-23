@@ -6,6 +6,7 @@ import cn.salx.plugins.dailyexplimit.dexp.EXPGainedManager;
 import cn.salx.plugins.dailyexplimit.dexp.EXPMaxManager;
 import cn.salx.plugins.dailyexplimit.job.JobManager;
 import cn.salx.plugins.dailyexplimit.listener.BukkitListener;
+import cn.salx.plugins.dailyexplimit.placeholderapi.DailyExpLimitExpansion;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -34,6 +35,16 @@ public final class DailyEXPLimit extends JavaPlugin {
         pluginCommand.setTabCompleter(this.commandManager);
 
         jobManager = new JobManager(this);
+
+        checkAndRegisterPlaceholderAPI();
+    }
+
+    private void checkAndRegisterPlaceholderAPI() {
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new DailyExpLimitExpansion(this).register();
+        } else {
+            getLogger().warning("Could not find PlaceholderAPI! Do not response PlaceholderAPI's calling.");
+        }
     }
 
     @Override
