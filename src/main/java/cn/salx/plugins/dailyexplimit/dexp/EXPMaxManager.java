@@ -5,9 +5,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -19,7 +17,7 @@ public class EXPMaxManager {
     private final DailyEXPLimit plugin;
 
     private final HashMap<String, Integer> groupExpLimitMap = new HashMap<>();
-    private final HashMap<String, Integer> tempExpLimitMap = new HashMap<>();
+    private final HashMap<UUID, Integer> tempExpLimitMap = new HashMap<>();
     private final String defaultEXPLimitKey = "dexp.limit.default";
 
     public EXPMaxManager(DailyEXPLimit plugin) {
@@ -49,13 +47,13 @@ public class EXPMaxManager {
         Integer groupExpLimit = groupExpLimitMap.keySet().stream()
                 .filter(player::hasPermission)
                 .map(groupExpLimitMap::get)
-                .sorted().findFirst().orElse(getDefaultEXPLimit());
-        Integer tempExpLimit = tempExpLimitMap.getOrDefault(player.getName(), 0);
+                .max(Comparator.comparingInt(o -> o)).orElse(getDefaultEXPLimit());
+        Integer tempExpLimit = tempExpLimitMap.getOrDefault(player.getUniqueId(), 0);
         return groupExpLimit + tempExpLimit;
     }
 
     public int addUserTempExpLimit(Player player, Integer limit) {
-        tempExpLimitMap.compute(player.getName(), (k, v) -> v == null ? limit : v + limit);
+        tempExpLimitMap.compute(player.getUniqueId(), (k, v) -> v == null ? limit : v + limit);
         return getUserExpLimit(player);
     }
 
